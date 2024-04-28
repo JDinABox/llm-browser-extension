@@ -1,0 +1,31 @@
+{
+	"name": "vllm-browser-extension",
+	"private": true,
+	"version": "1.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "vite build",
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"format": "prettier --plugin=prettier-plugin-svelte --plugin=prettier-plugin-organize-imports --plugin=prettier-plugin-tailwindcss --write ."
+	},
+	"devDependencies": {
+		"@sveltejs/vite-plugin-svelte": "^2.0.3",
+		"@tsconfig/svelte": "^3.0.0",
+		"@types/webextension-polyfill": "^0.10.0",
+		"autoprefixer": "^10.4.19",
+		"postcss": "^8.4.38",
+		"prettier": "^3.2.5",
+		"prettier-plugin-organize-imports": "^3.2.4",
+		"prettier-plugin-svelte": "^3.2.3",
+		"prettier-plugin-tailwindcss": "^0.5.14",
+		"svelte": "^3.55.1",
+		"svelte-check": "^2.10.3",
+		"tailwindcss": "^3.4.3",
+		"tslib": "^2.5.0",
+		"typescript": "^5.3.2",
+		"vite": "^4.0.0",
+		"vite-plugin-web-extension": "^4.0.0",
+		"webextension-polyfill": "^0.10.0"
+	}
+}

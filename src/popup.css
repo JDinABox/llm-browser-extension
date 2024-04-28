@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+	@apply w-[300px] h-[400px];
+}
+
+body {
+  @apply bg-slate-900 text-white font-sans;
+}
+
+* {
+	@apply m-0 min-h-0 min-w-0 p-0 tracking-wide subpixel-antialiased;
+}
