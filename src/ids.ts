@@ -3,7 +3,7 @@ export const MenuItemId = {
 };
 export const MessageId = {
 	Handshake: 'handshake',
-	SummarizeSelection: 'summarize-selection-stream',
+	Update: 'update',
 	Start: 'start',
 	Reset: 'reset'
 };

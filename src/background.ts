@@ -94,7 +94,8 @@ browser.runtime.onInstalled.addListener((details) => {
 		if (info.menuItemId === MenuItemId.Summarize) {
 			openPopupHandshake(async () => {
 				if (info.selectionText === undefined) return;
-
+				sendMessage(MessageId.Reset);
+				
 				// send summary to the popup
 				const response = await fetch('http://home:11434/api/generate', {
 					method: 'POST',
@@ -110,13 +111,26 @@ browser.runtime.onInstalled.addListener((details) => {
 				if (response.body === undefined) {
 					return;
 				}
+
+				// clear old summary
+				browser.storage.session.remove('summary');
+				
+				// set original text
+				browser.storage.session.set({ original: info.selectionText });
+				
 				// send text Start message
 				sendMessage(MessageId.Start);
 
 				const reader = response.body.getReader();
+				readStream(reader, async (d) => {
+					const data = await browser.storage.session.get('summary');
+					if (!data || !data.summary) {
+						browser.storage.session.set({ summary: d });
+					} else {
+						browser.storage.session.set({ summary: data.summary + d });
+					}
 
-				readStream(reader, (d) => {
-					return sendMessage(MessageId.SummarizeSelection, d);
+					return sendMessage(MessageId.Update, d);
 				});
 			});
 		}
