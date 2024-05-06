@@ -14,9 +14,15 @@
 	"{{firefox}}.browser_action": {
 		"default_popup": "src/popup.html"
 	},
+	"{{chrome}}.host_permissions": [
+		"*://*/*"
+	],
+	"{{firefox}}.permissions": [
+		"*://*/*"
+	],
 	"background": {
 		"{{chrome}}.service_worker": "src/background.ts",
 		"{{firefox}}.scripts": ["src/background.ts"]
 	},
-  "permissions": ["tabs", "{{firefox}}.<all_urls>", "{{chrome}}.activeTab", "menus"]
+  "permissions": ["tabs", "{{firefox}}.<all_urls>", "{{chrome}}.activeTab", "menus", "storage"]
 }

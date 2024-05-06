@@ -4,11 +4,11 @@
 
 html,
 body {
-	@apply w-[300px] h-[400px];
+	@apply h-[400px] w-[600px];
 }
 
 body {
-  @apply bg-slate-900 text-white font-sans;
+	@apply bg-slate-900 font-sans text-white;
 }
 
 * {
