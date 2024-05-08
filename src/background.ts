@@ -1,17 +1,9 @@
 import browser from 'webextension-polyfill';
 import { MenuItemId, MessageId } from './ids';
 import { sendMessage } from './lib/sendMessage';
+import { summarize } from './lib/summarize';
 
-const summarySystemPrompt =
-	'You are a helpful assistant that summarizes text. Incorporate main ideas and essential information, eliminating extraneous language and focusing on critical aspects. Rely strictly on the provided text, without including external information. Format the summary in paragraph form for easy understanding.';
-/*const summarySystemPrompt = `
-As a professional summarizer, create a concise and comprehensive summary of the provided text, be it an article, post, conversation, or passage, while adhering to these guidelines:
-	1. Craft a summary that is detailed, thorough, in-depth, and complex, while maintaining clarity and conciseness.
-	2. Incorporate main ideas and essential information, eliminating extraneous language and focusing on critical aspects.
-	3. Rely strictly on the provided text, without including external information.
-	4. Format the summary in paragraph form for easy understanding.
-By following this optimized prompt, you will generate an effective summary that encapsulates the essence of the given text in a clear, concise, and reader-friendly manner. 
-`;*/
+
 
 interface generateStream {
 	model: string;
@@ -41,6 +33,8 @@ async function readStream(
 	// parseText
 	const parseText = (text: string): string => {
 		text = text.trim();
+		console.log(text);
+		
 		if (doneFound) {
 			buffer += text;
 			return '';
@@ -96,21 +90,9 @@ browser.runtime.onInstalled.addListener((details) => {
 				if (info.selectionText === undefined) return;
 				sendMessage(MessageId.Reset);
 				
-				// send summary to the popup
-				const response = await fetch('http://home:11434/api/generate', {
-					method: 'POST',
-					headers: new Headers({ 'content-type': 'application/json' }),
-					body: JSON.stringify({
-						model: 'nous-hermes2:10.7b', // 'dolphin-llama3:8b-v2.9-q6_K',
-						prompt: info.selectionText + '\n TLDR:',
-						system: summarySystemPrompt,
-						stream: true
-					})
-				});
-
-				if (response.body === undefined) {
-					return;
-				}
+				// get text summary stream
+				const reader = await summarize(info.selectionText);
+				if (reader === null) return;
 
 				// clear old summary
 				browser.storage.session.remove('summary');
@@ -121,7 +103,6 @@ browser.runtime.onInstalled.addListener((details) => {
 				// send text Start message
 				sendMessage(MessageId.Start);
 
-				const reader = response.body.getReader();
 				readStream(reader, async (d) => {
 					const data = await browser.storage.session.get('summary');
 					if (!data || !data.summary) {
